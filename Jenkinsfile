@@ -4,7 +4,6 @@ pipeline {
     tools {
         maven 'maven-3.9.2'
     }
-
     environment {
         // Define environment variables
         DOCKER_IMAGE_NAME = 'welcome-api'
