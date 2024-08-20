@@ -7,6 +7,7 @@ pipeline {
 
     environment {
         // Define environment variables
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
         DOCKER_IMAGE_NAME = 'welcome-api'
         DOCKER_TAG = 'latest'
     }
@@ -44,17 +45,31 @@ pipeline {
                 script {
                     // Build the Docker image
                     sh """
-                    docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} .
+                    docker build -t ${DOCKERHUB_CREDENTIALS_USR}/${DOCKER_IMAGE_NAME}:${DOCKER_TAG} .
                     """
                 }
             }
         }
+        stage('login to dockerhub'){
+            steps {
+
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+            }
+        }
+        stage('push image to docker hub'){
+            steps{
+
+                 sh """
+                docker push ${DOCKERHUB_CREDENTIALS_USR}/${DOCKER_IMAGE_NAME}:${DOCKER_TAG}
+                """
+            }
+        }
+
     }
 
     post {
         always {
-            // Archive the artifacts for later use
-            archiveArtifacts artifacts: 'target/*.jar', allowEmptyArchive: true
+            sh 'docker logout'
         }
     }
 }
