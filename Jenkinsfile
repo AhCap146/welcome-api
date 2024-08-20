@@ -1,9 +1,9 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'maven-3.9.2'
-    }
+//     tools {
+//         maven 'maven-3.9.2'
+//     }
 
     environment {
         // Define environment variables
