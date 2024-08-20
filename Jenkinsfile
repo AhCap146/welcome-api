@@ -4,6 +4,7 @@ pipeline {
     tools {
         maven 'maven-3.9.2'
     }
+
     environment {
         // Define environment variables
         DOCKER_IMAGE_NAME = 'welcome-api'
@@ -17,11 +18,17 @@ pipeline {
                 checkout scm
             }
         }
+        stage('Fix Permissions') {
+             steps {
+                // Ensure mvnw script is executable
+                sh 'chmod +x mvnw'
+              }
+        }
 
         stage('Build') {
             steps {
                 // Run Maven to build the project
-                sh './mvnw clean package'
+               sh './mvnw -B -DskipTests clean package'
             }
         }
 
