@@ -59,17 +59,24 @@ pipeline {
                 """
             }
         }
-        stage('Deploy to Kubernetes'){
-            steps{
-                sh """
-             kubectl set image deployment/webapi-deployment webapi-container=${DOCKERHUB_CREDENTIALS_USR}/${DOCKER_IMAGE_NAME}:${DOCKER_TAG}
-               echo "Updated webapi-deployment.yaml:"
-                           cat webapi-deployment.yaml
-                kubectl apply -f webapi-deployment.yaml
-                """
 
-            }
-        }
+        stage('Update YAML and Deploy to Kubernetes') {
+            steps {
+                  script {
+                            sh """
+                            echo "Updating image in webapi-deployment.yaml using yq"
+                             yq e '.spec.template.spec.containers[0].image = "${DOCKERHUB_CREDENTIALS_USR}/${DOCKER_IMAGE_NAME}:${DOCKER_TAG}"' -i webapi-deployment.yaml
+
+                            # Display the updated YAML file for verification
+                            echo "Updated webapi-deployment.yaml:"
+                            cat webapi-deployment.yaml
+
+                            # Apply the deployment to Kubernetes
+                            kubectl apply -f webapi-deployment.yaml
+                            """
+                        }
+                    }
+                }
     }
 
     post {
