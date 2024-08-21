@@ -63,6 +63,9 @@ pipeline {
             steps{
                 sh """
                 sed -i 's|image: ${DOCKER_IMAGE_NAME}:${DOCKER_TAG}|image: ${DOCKERHUB_CREDENTIALS_USR}/${DOCKER_IMAGE_NAME}:${DOCKER_TAG}|g' webapi-deployment.yaml
+
+               echo "Updated webapi-deployment.yaml:"
+                           cat webapi-deployment.yaml
                 kubectl apply -f webapi-deployment.yaml
                 """
 
