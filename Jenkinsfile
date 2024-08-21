@@ -4,7 +4,7 @@ pipeline {
         // Define environment variables
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
         DOCKER_IMAGE_NAME = 'welcome-api'
-        DOCKER_TAG = 'latest'
+        DOCKER_TAG = "${BUILD_NUMBER}"
     }
 
     stages {
@@ -62,6 +62,7 @@ pipeline {
         stage('Deploy to Kubernetes'){
             steps{
                 sh """
+                sed -i 's|image: ${DOCKER_IMAGE_NAME}:${DOCKER_TAG}|image: ${DOCKERHUB_CREDENTIALS_USR}/${DOCKER_IMAGE_NAME}:${DOCKER_TAG}|g' webapi-deployment.yaml
                 kubectl apply -f webapi-deployment.yaml
                 """
 
