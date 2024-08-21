@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapi-deployment
+  labels:
+    app: webapi
+spec:
+  replicas: 1  # Number of pod replicas to run
+  selector:
+    matchLabels:
+      app: webapi
+  template:
+    metadata:
+      labels:
+        app: webapi
+    spec:
+      containers:
+        - name: webapi-container
+          image: ahussain146/welcome-api  # Replace with your Docker Hub username and image tag
+          ports:
+            - containerPort: 8080  # The port that your container exposes
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapi-service
+  labels:
+    app: webapi
+spec:
+  type: NodePort  # Expose the service using a NodePort
+  ports:
+    - port: 80          # The port to expose the service on
+      targetPort: 8080  # The port that your container listens on
+      nodePort: 30007   # The port on the node that the service will be exposed on (must be between 30000-32767)
+  selector:
+    app: webapi
