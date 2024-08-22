@@ -14,12 +14,12 @@ pipeline {
                 checkout scm
             }
         }
-//         stage('Fix Permissions') {
-//              steps {
-//                 // Ensure mvnw script is executable
-//                 sh 'chmod +x mvnw'
-//               }
-//         }
+        stage('Fix Permissions') {
+             steps {
+                // Ensure mvnw script is executable
+                sh 'chmod +x mvnw'
+              }
+        }
 
         stage('Build') {
             steps {
