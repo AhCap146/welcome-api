@@ -62,7 +62,7 @@ pipeline {
         stage('Deploy to Kubernetes'){
             steps{
                 sh """
-                kubectl apply -f webapi-deployment.yaml
+                kubectl apply -f webapi-deployment.yaml -n jenkins
                 """
 
             }
