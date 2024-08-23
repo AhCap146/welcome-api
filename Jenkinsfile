@@ -21,44 +21,44 @@ pipeline {
               }
         }
 
-        stage('Build') {
-            steps {
-                // Run Maven to build the project
-               sh './mvnw -B -DskipTests clean package'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                // Run tests with Maven
-                sh './mvnw test'
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    // Build the Docker image
-                    sh """
-                    docker build -t ${DOCKERHUB_CREDENTIALS_USR}/${DOCKER_IMAGE_NAME}:${DOCKER_TAG} .
-                    """
-                }
-            }
-        }
-        stage('Login to Dockerhub'){
-            steps {
-
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-            }
-        }
-        stage('Push Image to Dockerhub'){
-            steps{
-
-                 sh """
-                docker push ${DOCKERHUB_CREDENTIALS_USR}/${DOCKER_IMAGE_NAME}:${DOCKER_TAG}
-                """
-            }
-        }
+//         stage('Build') {
+//             steps {
+//                 // Run Maven to build the project
+//                sh './mvnw -B -DskipTests clean package'
+//             }
+//         }
+//
+//         stage('Test') {
+//             steps {
+//                 // Run tests with Maven
+//                 sh './mvnw test'
+//             }
+//         }
+//
+//         stage('Build Docker Image') {
+//             steps {
+//                 script {
+//                     // Build the Docker image
+//                     sh """
+//                     docker build -t ${DOCKERHUB_CREDENTIALS_USR}/${DOCKER_IMAGE_NAME}:${DOCKER_TAG} .
+//                     """
+//                 }
+//             }
+//         }
+//         stage('Login to Dockerhub'){
+//             steps {
+//
+//                 sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+//             }
+//         }
+//         stage('Push Image to Dockerhub'){
+//             steps{
+//
+//                  sh """
+//                 docker push ${DOCKERHUB_CREDENTIALS_USR}/${DOCKER_IMAGE_NAME}:${DOCKER_TAG}
+//                 """
+//             }
+//         }
         stage('Deploy to Kubernetes'){
             steps{
                 sh """
